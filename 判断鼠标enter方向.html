@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .cell:first-child{
+            border-left: 1px solid #000;
+        }
+        .container {
+            height: 100px;
+            display: -webkit-box!important;
+            display: -webkit-flex!important;
+            display: -ms-flexbox!important;
+            display: flex!important;
+            -webkit-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+        .container>.cell {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            width: 0;
+            -webkit-flex-basis: 0;
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            max-width: 100%;
+            display: block;
+            padding: 0!important;
+            position: relative;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            color: #fff;
+            text-align: center;
+            line-height: 100px;
+        }
+        .cell.tran{
+            background: #000000;
+            -webkit-transition: all .5s linear;
+            -moz-transition: all .5s linear;
+            -ms-transition: all .5s linear;
+            -o-transition: all .5s linear;
+            transition: all .5s linear;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="cell" id="cell1"></div>
+    <div class="cell" id="cell2"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+</div>
+
+<script src="src/js/jquery-2.0.3.js"></script>
+<script>
+    function position(){
+        $('.container').delegate('.cell','mouseenter',function(e){
+            var $this = this;
+            var direction = mouseDirection($this, e);
+            this.innerHTML=direction;
+            $(this).addClass('tran');
+            $(this).on('mouseleave',function(e){
+                $(this).removeClass('tran');
+            });
+        });
+    }
+    var mouseDirection = function(dom,event){
+        //console.log('X: '+event.clientX+ ' Y: '+event.clientY);
+        var rect = dom.getBoundingClientRect();
+        var left = rect.left, right = rect.right, top = rect.top, bottom = rect.bottom,
+            width = rect.width, height = rect.height,
+            k1 = (bottom - top)/(right - left), k2 = (top - bottom)/(right - left);
+        var cx = left + width/ 2, cy = top + height/ 2,
+            k = (event.clientY - cy)/(event.clientX - cx);
+        //console.log('k1='+k1+' k2='+k2+' k='+k);
+        if(k <= k1 && k >= k2){
+            if(event.clientX >= cx){
+                console.log('right');
+                return 'right';
+            }else{
+                console.log('left');
+                return 'left';
+            }
+        }else{
+            if(event.clientY > cy){
+                console.log('bottom');
+                return 'bottom';
+            }else{
+                console.log('top');
+                return 'top';
+            }
+        }
+    };
+    position();
+</script>
+</body>
+</html>
